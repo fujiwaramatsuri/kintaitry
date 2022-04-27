@@ -27,7 +27,7 @@
     <th>休憩開始</th>
     <th>休憩終了</th>
   </tr>
-  @foreach ($items as $item)
+  @foreach ($item as $items)
   <tr>
     <td>
       {{$item->user}}

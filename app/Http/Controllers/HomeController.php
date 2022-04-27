@@ -93,7 +93,7 @@ public function confilm()
         // dd($item);
         // $rest = DB::select('select * from rests');
         // dd($rest);
-        $items = attendance::Paginate(3);
-        return view('confilm',['items' => $items]);
+        $items = attendance::Paginate(5);
+        return view('confilm',['item' => $item]);
     }
 }
