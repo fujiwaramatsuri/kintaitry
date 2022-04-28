@@ -87,13 +87,16 @@ public function rest_end()
 
 public function confilm()
     {
-        $item = Attendance::first();//モデルから取ってくる
-        // $item = DB::table('attendances')->first();
-        // $items = DB::select('select * from attendances')->first();
+        $items = Attendance::first();//モデルから取ってくる
+        // $item = Rest::first();
+        // $item = DB::table('attendances')->get();
+        // $item = DB::table('users')->get();
+        // $item = DB::select('select * from users' );
+        // $item = DB::select('select * from attendances');
         // dd($item);
-        // $rest = DB::select('select * from rests');
+        // $item = DB::select('select * from rests');
         // dd($rest);
         $items = attendance::Paginate(5);
-        return view('confilm',['item' => $item]);
+        return view('confilm',['item' => $items]);
     }
 }
