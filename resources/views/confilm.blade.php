@@ -30,19 +30,19 @@
   @foreach ($item as $items)
   <tr>
     <td>
-      {{$item->user}}
+      {{$items->user_id}}
     </td>
     <td>
-      {{$item->strat_time}}
+      {{$items->start_time}}
     </td>
     <td>
-      {{$item->end_time}}
+      {{$items->end_time}}
     </td>
     <td>
-      {{$item->rests_strat}}
+      {{$items->rests_strat}}
     </td>
     <td>
-      {{$item->rests_end}}
+      {{$items->rests_end}}
     </td>
   </tr>
   @endforeach
