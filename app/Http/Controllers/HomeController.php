@@ -29,7 +29,63 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        // ボタン活性false非活性
+        $work_in = false;
+        $work_out = false;
+        $rest_in = false;
+        $rest_out = false;
+
+        $user = Auth::user();//Auth=現ユーザー
+        $today = Carbon::today();//->fomat('Y-m-d');
+        $now = Carbon::now();//->format('Y-m-d');
+        $attendance = Attendance::where('user_id',$user->id)->where('date',$today)->first();
+        $past = Attendance::where('user_id',$user->id)->where('date','<', $today)->first();
+        $endtime = Attendance::where('user_id',$user->id)->latest()->first();
+        $starttime = Attendance::where('user_id',$user->id)->latest()->first();
+
+        // 出勤したまま日を跨ぐとend_timeを'23:59:59'に更新
+    if($past->start_time != null && $past->end_time =null && $past->date != $now){$endtime->update([
+        'end_time' => '23:59:59',
+    ]);
+    }
+    
+    //日を跨いだ際の出勤を継続するためにstrat_timeに'00:00:00'を
+    //attendanceテーブルにデータがあると実行しない = '00:00:00'を格納
+
+if (($starttime) && $past->end_time == '23:59:59' && empty($attendance)){
+        $starttime = Attendance::create([
+            'user-id' => $user->id,
+            'date' => Carabon::today(),
+            'strat_time' =>'00:00:00',
+        ]);
+    }
+    if ($attendance != null) { // 勤務開始ボタンを押した場合
+            if ($attendance['end_time'] != null) { // 勤務終了ボタンを押した場合
+            } else { // 勤務中の場合
+                $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
+                if ($rest != null) { // 休憩開始ボタンを押した場合
+                    if ($rest['breakout_time'] != null) { // 休憩終了ボタンを押した場合
+                        $work_out = true;
+                        $rest_in = true;
+                    } else { // 休憩中の場合
+                        $work_out = true;
+                    }
+                } else { // 休憩中ではない場合
+                    $work_out = true;
+                    $rest_in = true;
+                }
+            }
+        } else { // 当日初めてログインした場合
+            $work_in = true;
+        }
+    
+$btn = [
+    'work_in' => $work_in,
+    'work_out' => $work_out,
+    'rest_in' => $rest_in,
+    'rest_out' => $rest_out,
+];
+        return view('home', ['btn' => $btn]);
     }
     // 勤怠開始
     public function start()

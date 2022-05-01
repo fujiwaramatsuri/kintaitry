@@ -10,7 +10,7 @@ class Rest extends Model
     use HasFactory;
     // 一体多リレーション
     protected $fillable = [
-        'user_id',
+        // 'user_id',
         'date',
         'attendance_id',
         'rests_start',
