@@ -44,15 +44,19 @@ class HomeController extends Controller
         $starttime = Attendance::where('user_id',$user->id)->latest()->first();
 
         // 出勤したまま日を跨ぐとend_timeを'23:59:59'に更新
-    if($past->start_time != null && $past->end_time =null && $past->date != $now){$endtime->update([
-        'end_time' => '23:59:59',
-    ]);
+    if(isset($past)
+    && $past->start_time != null 
+    && $past->end_time =null 
+    && $past->date != $now){
+        $endtime->update([
+            'end_time' => '23:59:59',
+        ]);
     }
     
     //日を跨いだ際の出勤を継続するためにstrat_timeに'00:00:00'を
     //attendanceテーブルにデータがあると実行しない = '00:00:00'を格納
 
-if (($starttime) && $past->end_time == '23:59:59' && empty($attendance)){
+if (isset($past) && ($starttime) && $past->end_time == '23:59:59' && empty($attendance)){
         $starttime = Attendance::create([
             'user-id' => $user->id,
             'date' => Carabon::today(),
@@ -64,7 +68,7 @@ if (($starttime) && $past->end_time == '23:59:59' && empty($attendance)){
             } else { // 勤務中の場合
                 $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
                 if ($rest != null) { // 休憩開始ボタンを押した場合
-                    if ($rest['breakout_time'] != null) { // 休憩終了ボタンを押した場合
+                    if ($rest['rests_end'] != null) { // 休憩終了ボタンを押した場合
                         $work_out = true;
                         $rest_in = true;
                     } else { // 休憩中の場合
