@@ -31,4 +31,5 @@ Route::post('/rest_start', [App\Http\Controllers\HomeController::class,'rest_sta
 // 休憩終了
 Route::post('/rest_end', [App\Http\Controllers\HomeController::class,'rest_end'])->name('rest_end');
 //　日付一覧
-Route::get('/confilm', [App\Http\Controllers\HomeController::class, 'confilm'])->name('confilm')->name('confilm');
+Route::get('/attendance', [AttendanceController::class, 'getAttendance']);
+        Route::post('/attendance', [AttendanceController::class, 'changeDate']);
