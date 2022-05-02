@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Attendance;
-use App\Models\Rset;
+use App\Models\Rest;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -141,18 +141,93 @@ public function rest_end()
         return redirect('/home');
     }
 
-public function confilm()
+public function getAttendance(Request $request)
     {
-        $items = Attendance::first();//モデルから取ってくる
-        // $item = Rest::first();
-        // $item = DB::table('attendances')->get();
-        // $item = DB::table('users')->get();
-        // $item = DB::select('select * from users' );
-        // $item = DB::select('select * from attendances');
-        // dd($item);
-        // $item = DB::select('select * from rests');
-        // dd($rest);
-        $items = attendance::Paginate(5);
-        return view('confilm',['item' => $items]);
+        if ($request->page) {
+            $date = $request->date; // 現在指定している日付を取得
+        } else {
+            $date = Carbon::today()->format("Y-m-d");
+        }
+        $attendances = Attendance::whereDate('date', $date)->orderBy('user_id', 'asc')->paginate(5);
+        $attendances->appends(compact('date')); //日付を渡す
+
+        foreach ($attendances as $attendance) {
+            foreach ($attendances as $attendance) {
+                // このループのattendanceのidを持つrestデータを取得
+                // 休憩時間
+                $rests = $attendance->rests;
+                $total_rest_time = 0;
+                foreach ($rests as $rest) {
+                    $total_rest_time = $total_rest_time + strtotime($rest->rests_end) - strtotime($rest->rests_strat);
+                }
+                $rest_hour = floor($total_rest_time / 3600); // 時を算出
+                $rest_minute = floor(($total_rest_time / 60) % 60); // 分を算出
+                $rest_minute_c = floor(($rest_minute / 5)) * 5; //分を5分単位で切り下げ
+                $rest_seconds = floor($total_rest_time % 60); //秒を算出
+
+                // sprintf関数で第一引数に指定したフォーマットで文字列を生成
+                $attendance->rest_time = sprintf('%2d時間%02d分', $rest_hour, $rest_minute_c, $rest_seconds);
+                // 拘束時間
+                $restraint_time = strtotime($attendance->end_time) - strtotime($attendance->start_time);
+                //拘束時間と合計休憩時間の差
+                $total_work_time = 0;
+                $total_work_time = $total_work_time + $restraint_time - $total_rest_time;
+                $work_hour = floor($total_work_time / 3600);
+                $work_minute = floor(($total_work_time / 60) % 60);
+                $work_minute_c = floor(($work_minute / 5)) * 5;
+                $work_second = floor($total_work_time % 60);
+                $attendance->work_time = sprintf('%2d時間%02d分', $work_hour, $work_minute_c, $work_second);
+            }
+        }
+
+        return view('attendance', [
+            'attendances' => $attendances,
+            'today' => $date
+        ]);
+    }
+
+    public function changeDate(Request $request)
+    {
+        // 一日前（'<'ボタン）
+        if ($request->input('before') == 'before') {
+            $date = date('Y-m-d', strtotime('-1day', strtotime($request->input('date'))));
+            $attendances = Attendance::whereDate('date', $date)->orderBy('user_id', 'asc')->paginate(5);
+        }
+        // 一日後（'>'ボタン）
+        if ($request->input('next') == 'next') {
+            $date = date('Y-m-d', strtotime('+1day', strtotime($request->input('date'))));
+            $attendances = Attendance::whereDate('date', $date)->orderBy('user_id', 'asc')->paginate(5);
+        }
+        $attendances->appends(compact('date')); //日付を渡す
+
+        foreach ($attendances as $attendance) {
+            // このループのattendanceのidを持つrestデータを取得
+            // 休憩時間
+            $rests = $attendance->rests;
+            $total_rest_time = 0;
+            foreach ($rests as $rest) {
+                $total_rest_time = $total_rest_time + strtotime($rest->rests_end) - strtotime($rest->rests_strat);
+            }
+            $rest_hour = floor($total_rest_time / 3600); // 時を算出
+            $rest_minute = floor(($total_rest_time / 60) % 60); // 分を算出
+            $rest_minute_c = floor(($rest_minute / 5)) * 5; //分を5分単位で切り下げ
+            $rest_seconds = floor($total_rest_time % 60); //秒を算出
+            $attendance->rest_time = sprintf('%2d時間%02d分', $rest_hour, $rest_minute_c, $rest_seconds);
+            // 拘束時間
+            $restraint_time = strtotime($attendance->end_time) - strtotime($attendance->start_time);
+            //拘束時間と合計休憩時間の差
+            $total_work_time = 0;
+            $total_work_time = $total_work_time + $restraint_time - $total_rest_time;
+            $work_hour = floor($total_work_time / 3600);
+            $work_minute = floor(($total_work_time / 60) % 60);
+            $work_minute_c = floor(($work_minute / 5)) * 5;
+            $work_second = floor($total_work_time % 60);
+            $attendance->work_time = sprintf('%2d時間%02d分', $work_hour, $work_minute_c, $work_second);
+        }
+
+        return view('attendance')->with([
+            'attendances' => $attendances,
+            'today' => $date
+        ]);
     }
 }
