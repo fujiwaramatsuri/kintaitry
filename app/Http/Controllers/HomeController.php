@@ -63,22 +63,23 @@ if (isset($past) && ($starttime) && $past->end_time == '23:59:59' && empty($atte
             'strat_time' =>'00:00:00',
         ]);
     }
-    if ($attendance != null) { // 勤務開始ボタンを押した場合
-            if ($attendance['end_time'] != null) { // 勤務終了ボタンを押した場合
-            } else { // 勤務中の場合
-                $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
-                if ($rest != null) { // 休憩開始ボタンを押した場合
-                    if ($rest['rests_end'] != null) { // 休憩終了ボタンを押した場合
+    if ($attendance !== null) { // 勤務開始ボタンを押した場合
+            
+        if ($attendance->end_time === null ) { // 勤務終了ボタンを押した場合
+            $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
+                if ($rest !== null) { // 休憩開始ボタンを押した場合
+                    if ($rest->rests_end !== null) { // 休憩終了ボタンを押した場合
                         $work_out = true;
                         $rest_in = true;
                     } else { // 休憩中の場合
                         $work_out = true;
+                        $rest_out = true;
                     }
                 } else { // 休憩中ではない場合
                     $work_out = true;
                     $rest_in = true;
                 }
-            }
+        }
         } else { // 当日初めてログインした場合
             $work_in = true;
         }
