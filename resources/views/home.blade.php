@@ -16,45 +16,24 @@
                 <form action="/start" method="POST" class="home-btn A">
                     @csrf
                     <input type="submit" class="home-btn A"
-                         value="勤務開始" id="work_in" onclick="btnA
-                            // getElementById('buttonA').disabled = true;
-                            // getElementById('buttonB').disabled = false;
-                            // getElementById('buttonC').disabled = true;
-                            // getElementById('buttonD').disabled = false;"> 
+                         value="勤務開始" id="work_in" <?php if ($btn['work_in'] == false) { ?> disabled <?php } ?>> 
                     </form>
                     <form action="/end" method="POST" class="home-btn D">
                         @csrf
                     <input type="submit" class="home-btn D"
-                        value="勤務終了"id="work_out"  onclick="
-                            // getElementById('buttonA').disabled = false;
-                            // getElementById('buttonB').disabled = true;
-                            // getElementById('buttonC').disabled = true;
-                            // getElementById('buttonD').disabled = true;">
+                        value="勤務終了"id="work_out" <?php if ($btn['work_out'] == false) { ?> disabled <? } ?>>
                     </form>
                     <form action="/rest_start" method="POST" class="home-btn B">
                         @csrf
                     <input type="submit" class="home-btn B"
-                        value="休憩開始"id="rest_in"   onclick="
-                            // getElementById('buttonB').disabled = true;
-                            // getElementById('buttonC').disabled = false;">
+                        value="休憩開始"id="rest_in" <?php if ($btn['rest_in'] == false) { ?> disabled <? } ?>>
                     </form>
                     <form action="/rest_end" method="POST" class="home-btn C">
                         @csrf
                     <input type="submit" class="home-btn C"
-                        value="休憩終了"id="rest_out"  onclick="
-                            // getElementById('buttonB').disabled = false;
-                            // getElementById('buttonC').disabled = true;">
+                        value="休憩終了"id="rest_out" <?php if($btn['rest_out'] == false) { ?> disabled <? } ?>>
                             </form>
-<!-- disabled→ボタン非活性 -->
-<script>
-    function btnA(){
-    if(
-        document.getElementById('buttonA').disabled = true;
-        document.getElementById('buttonB').disabled = false;
-        document.getElementById('buttonC').disabled = true;
-        document.getElementById('buttonD').disabled = false;)
-    }
-    </script>
+
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}

@@ -62,6 +62,12 @@
     text-align:center;
     }
     /* ヘッダー */
+.navbar-nav{
+  text-align: right;
+}
+.nav-link{
+  text-align: center;
+}
 .header {
     display: flex;
     justify-content: space-between;
@@ -109,6 +115,32 @@
 	margin: auto;
     font-size: 30px;
 }
+
+/*日付一覧*/
+.change-date{
+  display: flex;
+  align-items: center;/*  アイテムの縦方向 */
+  justify-content: center;/*アイテムの水平方向 */
+}
+.table{
+  margin: auto;
+}
+.table-head-ttl{
+  align-items: center;
+  background-color: #289ADC;
+  color: white;
+  padding: 5px 40px;
+}
+.table-item{
+  padding: auto;
+  text-align: center;
+}
+.justify-content-center{
+  display: ;
+  list-style: none;
+  text-align: center;
+  
+}
  * {
  /* border:1px solid red !important; */
 }
@@ -137,31 +169,33 @@
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
-                                <span class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <span class="nav-itemA">
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('ログイン') }}</a>
                                 </span>
                             @endif
 
                             @if (Route::has('register'))
-                                <span class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                <span class="nav-itemA">
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('会員登録') }}</a>
                                 </span>
                             @endif
 
                         @else
                         
-                            <span class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="text" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    ホーム
+                            <span class="nav-itemA">
+                               <a href="/home">ホーム</a>
+                               </span>
 </a></span>
 <!-- 日付一覧 -->
-                               
+                               <span class="nav-itemA">
+                               <a href="/attendance">日付一覧</a>
+                               </span>
 <!-- ログアウト -->
-                                <span class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <span class="nav-itemA" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        {{ __('ログアウト') }}
                                     </a>
 </span>
 

@@ -1,9 +1,10 @@
-@extends('layout')
+@extends('layouts.app')
 @section('title','Atte|日付一覧')
-<header class="header">
-  <h1 class="logo">Atte</h1>
-  @include('nav')
-</header>
+<!-- <header class="header"> -->
+  <!-- <h1 class="logo">Atte</h1> -->
+
+<!-- </header> -->
+@section('content')
 <div class="change-date">
   <form action="/attendance" method="POST">
     @csrf
@@ -20,7 +21,7 @@
   </form>
 </div>
 
-@section('content')
+
 <div class="attendance-list">
   <table class="table">
     <thead class="table-head">
@@ -42,11 +43,12 @@
         <td class="table-item">{{$attendance->rest_time}}</td>
         <td class="table-item">{{$attendance->work_time}}</td>
       </tr>
+      
       @endforeach
     </tbody>
   </table>
   <div class="d-flex justify-content-center">
     {{ $attendances->appends($today)->links('pagination::bootstrap-4') }}
-  </div>
+</div>
 </div>
 @endsection
