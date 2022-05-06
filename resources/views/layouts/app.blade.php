@@ -136,11 +136,11 @@
   text-align: center;
 }
 .justify-content-center{
-  display: ;
-  list-style: none;
-  text-align: center;
-  
-}
+  /* padding: auto;
+  margin-block: auto;
+  -webkit-text-orientation: upright;
+  writing-mode: vertical-lr;
+} */
  * {
  /* border:1px solid red !important; */
 }

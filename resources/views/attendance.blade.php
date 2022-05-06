@@ -49,6 +49,6 @@
   </table>
   <div class="d-flex justify-content-center">
     {{ $attendances->appends($today)->links('pagination::bootstrap-4') }}
-</div>
+  </div>
 </div>
 @endsection

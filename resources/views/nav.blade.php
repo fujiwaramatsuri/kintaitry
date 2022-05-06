@@ -1,28 +1,3 @@
-<div id="navArea">
-  <nav class="nav">
-    <div class="inner">
-      <ul class="nav-wrap">
-        <li class="nav-item"><a href="/" class="nav-item-link-style">ホーム</a></li>
-        <li class="nav-item"><a href="/attendance" class="nav-item-link-style">日付一覧</a></li>
-        <li class="nav-item">
-          <!-- views/layouts/navigation.blade.php から抜粋 (ログアウトボタン) -->
-          <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <x-dropdown-link :href="route('logout')" class="nav-item-link-style" onclick="event.preventDefault();this.closest('form').submit();">
-              {{ __('ログアウト') }}
-            </x-dropdown-link>
-          </form>
-        </li>
-      </ul>
-    </div>
-  </nav>
-  <div class="toggle-btn">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
-  <div id='mask'></div>
-</div>
 
 <style>
   @media screen and (max-width: 768px) {
@@ -116,7 +91,7 @@
       opacity: 0.6;
     }
 </style>
-<script>
+/* <script>
   let nav = document.querySelector("#navArea")
   let btn = document.querySelector(".toggle-btn")
   let mask = document.querySelector("#mask")
@@ -126,4 +101,4 @@
   mask.onclick = () => {
     nav.classList.toggle("open");
   }
-</script>
+</script> */

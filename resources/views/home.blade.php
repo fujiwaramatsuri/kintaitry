@@ -21,17 +21,17 @@
                     <form action="/end" method="POST" class="home-btn D">
                         @csrf
                     <input type="submit" class="home-btn D"
-                        value="勤務終了"id="work_out" <?php if ($btn['work_out'] == false) { ?> disabled <? } ?>>
+                        value="勤務終了"id="work_out" <?php if ($btn['work_out'] == false) { ?> disabled <?php } ?>>
                     </form>
                     <form action="/rest_start" method="POST" class="home-btn B">
                         @csrf
                     <input type="submit" class="home-btn B"
-                        value="休憩開始"id="rest_in" <?php if ($btn['rest_in'] == false) { ?> disabled <? } ?>>
+                        value="休憩開始"id="rest_in" <?php if ($btn['rest_in'] == false) { ?> disabled <?php } ?>>
                     </form>
                     <form action="/rest_end" method="POST" class="home-btn C">
                         @csrf
                     <input type="submit" class="home-btn C"
-                        value="休憩終了"id="rest_out" <?php if($btn['rest_out'] == false) { ?> disabled <? } ?>>
+                        value="休憩終了"id="rest_out" <?php if($btn['rest_out'] == false) { ?> disabled <?php } ?>>
                             </form>
 
                     @if (session('status'))
