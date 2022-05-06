@@ -64,7 +64,6 @@ if (isset($past) && ($starttime) && $past->end_time == '23:59:59' && empty($atte
         ]);
     }
     if ($attendance !== null) { // 勤務開始ボタンを押した場合
-            
         if ($attendance->end_time === null ) { // 勤務終了ボタンを押した場合
             $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
                 if ($rest !== null) { // 休憩開始ボタンを押した場合
@@ -73,7 +72,8 @@ if (isset($past) && ($starttime) && $past->end_time == '23:59:59' && empty($atte
                         $rest_in = true;
                     } else { // 休憩中の場合
                         $work_out = true;
-                        $rest_out = true;
+                        $rest_out =true;
+                        // $rest_out = true;
                     }
                 } else { // 休憩中ではない場合
                     $work_out = true;
@@ -229,7 +229,7 @@ public function getAttendance(Request $request)
             $work_second = floor($total_work_time % 60);
             $attendance->work_time = sprintf('%2d時間%02d分', $work_hour, $work_minute_c, $work_second);
         }
-
+        $attendance = attendance::Paginate(5);
         return view('attendance')->with([
             'attendances' => $attendances,
             'today' => $date
