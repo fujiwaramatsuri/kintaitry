@@ -1,9 +1,17 @@
 @extends('layouts.app')
 @section('title','Atte|日付一覧')
-<!-- <header class="header"> -->
-  <!-- <h1 class="logo">Atte</h1> -->
 
-<!-- </header> -->
+<style>
+  .justify-content-center{
+  padding: auto;
+  margin-block: auto;
+  -webkit-text-orientation: upright;
+  writing-mode: vertical-lr;
+}
+* {
+  background-color: azure;
+}
+</style>
 @section('content')
 <div class="change-date">
   <form action="/attendance" method="POST">

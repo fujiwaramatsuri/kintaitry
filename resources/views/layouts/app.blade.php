@@ -117,23 +117,30 @@
 }
 
 /*日付一覧*/
+.arrow{
+
+}
 .change-date{
   display: flex;
-  align-items: center;/*  アイテムの縦方向 */
-  justify-content: center;/*アイテムの水平方向 */
+  align-items: baseline;/*  アイテムの縦方向 */
+  justify-content: space-evenly;/*アイテムの水平方向 */
 }
 .table{
   margin: auto;
+  height: 60%;
+  width: -webkit-fill-available;
 }
 .table-head-ttl{
   align-items: center;
   background-color: #289ADC;
   color: white;
   padding: 5px 40px;
+  
 }
 .table-item{
-  padding: auto;
+  width: 10%;
   text-align: center;
+  border-bottom: dotted;
 }
 .justify-content-center{
   /* padding: auto;
