@@ -44,52 +44,53 @@ class HomeController extends Controller
         $starttime = Attendance::where('user_id',$user->id)->latest()->first();
 
         // 出勤したまま日を跨ぐとend_timeを'23:59:59'に更新
-    if(isset($past)
-    && $past->start_time != null 
-    && $past->end_time =null 
-    && $past->date != $now){
-        $endtime->update([
-            'end_time' => '23:59:59',
-        ]);
-    }
-    
-    //日を跨いだ際の出勤を継続するためにstrat_timeに'00:00:00'を
-    //attendanceテーブルにデータがあると実行しない = '00:00:00'を格納
+        if(isset($past)
+        && $past->start_time != null 
+        && $past->end_time =null 
+        && $past->date != $now){
+            $endtime->update([
+                'end_time' => '23:59:59',
+            ]);
+        }
+        
+        //日を跨いだ際の出勤を継続するためにstrat_timeに'00:00:00'を
+        //attendanceテーブルにデータがあると実行しない = '00:00:00'を格納
 
-if (isset($past) && ($starttime) && $past->end_time == '23:59:59' && empty($attendance)){
-        $starttime = Attendance::create([
-            'user-id' => $user->id,
-            'date' => Carabon::today(),
-            'strat_time' =>'00:00:00',
-        ]);
-    }
-    if ($attendance !== null) { // 勤務開始ボタンを押した場合
-        if ($attendance->end_time === null ) { // 勤務終了ボタンを押した場合
-            $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
+        if (isset($past) && ($starttime) && $past->end_time == '23:59:59' && empty($attendance)){
+            $starttime = Attendance::create([
+                'user-id' => $user->id,
+                'date' => Carabon::today(),
+                'strat_time' =>'00:00:00',
+            ]);
+        }
+
+        if ($attendance !== null) { // 勤務開始ボタンを押した場合
+            if ($attendance->end_time === null ) { // 勤務終了ボタンを押した場合
+                $rest = Rest::where('attendance_id', $attendance->id)->latest()->first();
+                // dd($rest);
                 if ($rest !== null) { // 休憩開始ボタンを押した場合
                     if ($rest->rests_end !== null) { // 休憩終了ボタンを押した場合
                         $work_out = true;
                         $rest_in = true;
                     } else { // 休憩中の場合
-                        $work_out = true;
-                        $rest_out =true;
-                        // $rest_out = true;
+                        // $work_out = true;
+                        $rest_out = true;
                     }
                 } else { // 休憩中ではない場合
                     $work_out = true;
                     $rest_in = true;
+                    // $rest_out = true;
                 }
-        }
+            }
         } else { // 当日初めてログインした場合
             $work_in = true;
         }
-    
-$btn = [
-    'work_in' => $work_in,
-    'work_out' => $work_out,
-    'rest_in' => $rest_in,
-    'rest_out' => $rest_out,
-];
+        $btn = [
+            'work_in' => $work_in,
+            'work_out' => $work_out,
+            'rest_in' => $rest_in,
+            'rest_out' => $rest_out,
+        ];
         return view('home', ['btn' => $btn]);
     }
     // 勤怠開始
@@ -120,11 +121,12 @@ $btn = [
         return redirect('/home');
 }
 
-// 休憩開始
-public function rest_start()
+    // 休憩開始
+    public function rest_start()
     {
-        $attendance = Auth::user();
-        
+        $user = Auth::user(); //開いているuser
+        $attendance = Attendance::where('user_id', $user->id)->latest()->first();//開いているuser_idとattendance＿idと連携
+        //↑がないとrestの連携にattendance_idじゃなくuser_idが入ってくる
         $rest = [
             // 'user_id' => $user->id,
             'attendance_id' => $attendance->id,
@@ -135,9 +137,10 @@ public function rest_start()
         DB::table('rests')->insert($rest);
         return redirect('/home');
     }
-public function rest_end()
+    public function rest_end()
     {
-        $attendance = Auth::user();//現ユーザー
+        $user = Auth::user();
+        $attendance = Attendance::where('user_id', $user->id)->latest()->first();
         $rests = DB::table('rests')->where('attendance_id',$attendance->id)->where('date', Carbon::today())->latest();
         $timestamp =Carbon::now();
         $rests->update([
@@ -146,7 +149,7 @@ public function rest_end()
         return redirect('/home');
     }
 
-public function getAttendance(Request $request)
+    public function getAttendance(Request $request)
     {
         if ($request->page) {
             $date = $request->date; // 現在指定している日付を取得
@@ -167,9 +170,8 @@ public function getAttendance(Request $request)
                 }
                 $rest_hour = floor($total_rest_time / 3600); // 時を算出
                 $rest_minute = floor(($total_rest_time / 60) % 60); // 分を算出
-                $rest_minute_c = floor(($rest_minute / 5)) * 5; //分を5分単位で切り下げ
+                $rest_minute_c = floor(($rest_minute / 1)) * 1; //分を１分単位で切り下げ
                 $rest_seconds = floor($total_rest_time % 60); //秒を算出
-
                 // sprintf関数で第一引数に指定したフォーマットで文字列を生成
                 $attendance->rest_time = sprintf('%2d時間%02d分', $rest_hour, $rest_minute_c, $rest_seconds);
                 // 拘束時間
